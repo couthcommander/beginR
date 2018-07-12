@@ -1,0 +1,271 @@
+How to Learn R
+========================================================
+author: Cole Beck
+date: July 13, 2018
+autosize: true
+css: myrules.css
+
+Programming is like Sudoku
+========================================================
+
+```{r, echo = FALSE}
+pnts <- seq(0, 1, length.out = 10)
+ltys <- ifelse(seq_along(pnts) %% 3 == 1, 1, 3)
+plot(0, type = 'n', xlim = c(0,1), ylim = c(0,1), axes = FALSE, xlab = '', ylab = '')
+for(i in seq_along(pnts)) {
+    lines(rep(pnts[i], 2), c(0,1), lty = ltys[i])
+    lines(c(0,1), rep(pnts[i], 2), lty = ltys[i])
+}
+xs <- pnts[-1] - (diff(pnts) / 2)
+ys <- rev(xs)
+text(xs[2], ys, 1:9, cex = 3)
+text(xs[3], ys, c(7,8,9,1,2,3,4,6,5), cex = 3)
+text(xs[4], ys[c(1,2,3,5,6)], c(3,1,8,9,5), cex = 3)
+text(xs[5], ys[c(1,2,5,6)], c(5,7,4,2), cex = 3)
+text(xs[6], ys[c(1,2,5,6,7)], c(9,4,8,1,5), cex = 3)
+text(xs[7], ys[1:8], c(2,3,1,5,6,4,8,9), cex = 3)
+text(xs[8], ys[c(2,3,4,5,8,9)], c(9,7,2,3,5,4), cex = 3)
+text(xs[9], ys[9], 2, cex = 3)
+```
+***
+- learn set of rules
+- does order matter when applying rules?
+- are there multiple solutions?
+- practice makes perfect
+
+Sources of Information
+========================================================
+
+## stackoverflow
+
+https://stackoverflow.com/tags/r/info
+
+## R clinic
+
+1st Friday of each month
+
+1:30pm in the Biostatistics Conference Room
+
+11105, 2525 West End Avenue
+
+Contact Cole at [cole.beck@vumc.org](mailto:cole.beck@vumc.org?subject=R Clinic)
+
+Sources
+========================================================
+
+type|site|link
+-----|-----|-----
+forum|stackoverflow|https://stackoverflow.com/questions/tagged/r
+forum|R-help|https://stat.ethz.ch/mailman/listinfo/r-help
+course|Coursera|https://www.coursera.org/course/rprog
+course|Datacamp|https://www.datacamp.com/courses/introduction-to-r
+tutorial|swirl|https://github.com/swirldev/swirl_courses#swirl-courses
+book|R for Data Science|http://r4ds.had.co.nz/
+book|Advanced R|http://adv-r.had.co.nz/
+blog|R-bloggers|http://www.r-bloggers.com/
+blog|RStudio blog|https://blog.rstudio.com/
+
+R Documentation
+========================================================
+
+### Accessing documentation from within a R session
+
+code|result
+----|----
+apropos('norm')|loaded functions with name containing "norm"
+help.search('norm')|any function with name or description containing "norm"
+help('rnorm')|help page for "rnorm" function
+?rnorm|help page for "rnorm" function
+help(package = "survival")|help page for "survival" package
+
+Building Blocks
+========================================================
+
+## Types of data
+
+- numeric (categorical)
+- character
+- logical
+- date (time)
+
+## Storage of data
+
+- vector
+- matrix
+- data.frame
+- list
+***
+## Special Types
+
+- Undefined: NULL
+- Missing: NA
+- Infinite: Inf, -Inf
+- Not a Number: NaN
+
+## Control Structures
+
+- iteration: for, while, apply
+- branching: if
+- functions
+
+Creating Numerical Vectors
+========================================================
+
+```{r}
+numeric(3)
+rep(1, 3)
+c(1, 2, 3)
+1:3
+seq(3)
+```
+***
+```{r}
+seq(1, 10, by = 2)
+seq(1, 21, length.out = 6)
+seq_along(c(1,10,100,1000))
+sample(10, 5)
+sample(3, 5, replace = TRUE)
+```
+
+Sampling from Distributions
+========================================================
+
+help("Distributions")
+
+```{r}
+rnorm(5)
+rbinom(10, 1, 0.5)
+rpois(5, 3)
+```
+
+Simulation Example
+========================================================
+
+```{r}
+x <- rnorm(50)
+mean(x)
+boot.samp <- numeric(1000)
+for(i in seq_along(boot.samp)) {
+  bx <- sample(x, replace = TRUE)
+  boot.samp[i] <- mean(bx)
+}
+mean(boot.samp)
+```
+
+data.frame
+========================================================
+
+```{r}
+df <- data.frame(
+  id = sample(3, 10, replace = TRUE),
+  date = as.Date(sample(365, 10), origin = "2017-01-01"),
+  value = runif(10, max = 100)
+)
+df
+```
+
+data.frame Examples
+========================================================
+
+```{r}
+table(df[,'id'])
+sorteddf <- df[with(df, order(id, date)),]
+sorteddf[1:5,]
+```
+
+data.frame Examples
+========================================================
+
+Subset data by condition
+
+```{r}
+df[df[,'value'] > 75,]
+sorteddf[!duplicated(sorteddf[,'id']),]
+```
+
+data.frame Examples
+========================================================
+
+```{r}
+tapply(df[,'date'], df[,'id'], min)
+as.Date(tapply(df[,'date'], df[,'id'], min), origin = '1970-01-01')
+tapply(df[,'value'], df[,'id'], mean)
+```
+
+data.frame Examples
+========================================================
+
+```{r}
+c1 <- tapply(df[,'date'], df[,'id'], min)
+c2 <- as.Date(tapply(df[,'date'], df[,'id'], min), origin = '1970-01-01')
+c3 <- tapply(df[,'value'], df[,'id'], mean)
+cbind(c1, c2, c3)
+data.frame(mindateint = c1, mindate = c2, meanval = c3)
+```
+
+Descriptive Statistics with Hmisc
+========================================================
+
+```{r}
+Hmisc::getHdata(diabetes)
+Hmisc::describe(diabetes[,c('chol','gender')])
+```
+
+Scatterplot
+========================================================
+
+```{r}
+ggplot2::qplot(waist, weight, data = diabetes, color = gender)
+```
+
+Running a Model with Predictions
+========================================================
+
+```{r}
+m <- lm(waist ~ weight + gender, data=diabetes)
+coef(summary(m))
+predict(m, data.frame(weight=seq(150, 250, by=20), gender = 'male'))
+```
+
+Writing a Function
+========================================================
+
+```{r}
+rolldice <- function(n = 1, sides = 6) {
+  sum(sample(sides, n, replace = TRUE))
+}
+rolldice(2)
+mean(replicate(1000, rolldice(sides = 100)))
+```
+
+Find Practice Problems
+========================================================
+
+- https://www.r-exercises.com/
+- https://projecteuler.net/archives
+- https://www.kaggle.com/competitions
+- https://fivethirtyeight.com/tag/the-riddler/
+
+```
+You play a game with four balls: One ball is red, one is blue, one is green and one is yellow. They are placed in a box. You draw a ball out of the box at random and note its color. Without replacing the first ball, you draw a second ball and then paint it to match the color of the first. Replace both balls, and repeat the process. The game ends when all four balls have become the same color. What is the expected number of turns to finish the game?
+```
+
+Answer
+========================================================
+
+```{r}
+draw <- function(box) {
+  x <- sample(box)
+  x[2] <- x[1]
+  x
+}
+play <- function(colors = c('red','blue','green','yellow')) {
+  cnt <- 0
+  while(length(unique(colors)) > 1) {
+    colors <- draw(colors)
+    cnt <- cnt + 1
+  }
+  cnt
+}
+mean(replicate(1000, play()))
+```
