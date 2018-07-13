@@ -5,6 +5,8 @@ date: July 13, 2018
 autosize: true
 css: myrules.css
 
+### Why are you here?
+
 Programming is like Sudoku
 ========================================================
 
@@ -38,7 +40,7 @@ Sources
 type|site|link
 -----|-----|-----
 forum|stackoverflow|https://stackoverflow.com/questions/tagged/r
-forum|R-help|https://stat.ethz.ch/mailman/listinfo/r-help
+forum|Rstudio community|https://community.rstudio.com/
 course|Coursera|https://www.coursera.org/course/rprog
 course|Datacamp|https://www.datacamp.com/courses/introduction-to-r
 tutorial|swirl|https://github.com/swirldev/swirl_courses#swirl-courses
@@ -164,7 +166,7 @@ sample(10, 5)
 ```
 
 ```
-[1] 3 9 5 7 2
+[1]  3  6  5 10  8
 ```
 
 ```r
@@ -172,67 +174,49 @@ sample(3, 5, replace = TRUE)
 ```
 
 ```
-[1] 3 3 3 3 2
+[1] 3 2 2 2 3
 ```
 
-Sampling from Distributions
+Creating Categorical Variables
 ========================================================
 
-help("Distributions")
+In R, categorical variables are called factors
 
 
 ```r
-rnorm(5)
+race <- factor(sample(3, 10, replace = TRUE), labels = c('white','black','other'))
+race
 ```
 
 ```
-[1]  2.1540430 -0.4187383 -0.7603599 -1.4586431 -0.1993815
-```
-
-```r
-rbinom(10, 1, 0.5)
-```
-
-```
- [1] 1 0 0 1 1 1 0 0 1 0
+ [1] white white white white black other white black other other
+Levels: white black other
 ```
 
 ```r
-rpois(5, 3)
+unclass(race)
 ```
 
 ```
-[1] 2 2 1 2 2
-```
-
-Simulation Example
-========================================================
-
-
-```r
-x <- rnorm(50)
-mean(x)
-```
-
-```
-[1] -0.2172774
+ [1] 1 1 1 1 2 3 1 2 3 3
+attr(,"levels")
+[1] "white" "black" "other"
 ```
 
 ```r
-boot.samp <- numeric(1000)
-for(i in seq_along(boot.samp)) {
-  bx <- sample(x, replace = TRUE)
-  boot.samp[i] <- mean(bx)
-}
-mean(boot.samp)
+factor(sample(c('light','moderate','vigorous'), 10, replace = TRUE), ordered = TRUE)
 ```
 
 ```
-[1] -0.2202678
+ [1] moderate light    vigorous vigorous light    vigorous moderate
+ [8] moderate moderate moderate
+Levels: light < moderate < vigorous
 ```
 
 data.frame
 ========================================================
+
+Typically you will create a data.frame by importing a CSV file from Excel. It is also easy to create your own.
 
 
 ```r
@@ -246,16 +230,16 @@ df
 
 ```
    id       date     value
-1   2 2017-08-15 35.805316
-2   2 2017-10-11 14.153188
-3   1 2017-06-21 79.122053
-4   1 2017-01-11 81.931212
-5   1 2017-12-21 98.091082
-6   3 2017-04-22 14.184767
-7   2 2017-09-24 95.712858
-8   1 2017-04-24  4.119469
-9   3 2017-11-07 80.360840
-10  3 2017-09-19 19.280653
+1   3 2017-09-14 75.005901
+2   2 2017-10-26 36.314735
+3   1 2017-04-06 80.341398
+4   1 2017-02-03 17.171802
+5   2 2017-08-28  2.338486
+6   2 2017-09-23 73.365255
+7   3 2017-02-28  2.440719
+8   2 2017-08-12 86.031041
+9   2 2017-03-20 28.278924
+10  3 2017-08-07 71.404525
 ```
 
 data.frame Examples
@@ -269,7 +253,7 @@ table(df[,'id'])
 ```
 
 1 2 3 
-4 3 3 
+2 5 3 
 ```
 
 ```r
@@ -279,11 +263,11 @@ sorteddf[1:5,]
 
 ```
   id       date     value
-4  1 2017-01-11 81.931212
-8  1 2017-04-24  4.119469
-3  1 2017-06-21 79.122053
-5  1 2017-12-21 98.091082
-1  2 2017-08-15 35.805316
+4  1 2017-02-03 17.171802
+3  1 2017-04-06 80.341398
+9  2 2017-03-20 28.278924
+8  2 2017-08-12 86.031041
+5  2 2017-08-28  2.338486
 ```
 
 data.frame Examples
@@ -298,11 +282,9 @@ df[df[,'value'] > 75,]
 
 ```
   id       date    value
-3  1 2017-06-21 79.12205
-4  1 2017-01-11 81.93121
-5  1 2017-12-21 98.09108
-7  2 2017-09-24 95.71286
-9  3 2017-11-07 80.36084
+1  3 2017-09-14 75.00590
+3  1 2017-04-06 80.34140
+8  2 2017-08-12 86.03104
 ```
 
 ```r
@@ -310,10 +292,10 @@ sorteddf[!duplicated(sorteddf[,'id']),]
 ```
 
 ```
-  id       date    value
-4  1 2017-01-11 81.93121
-1  2 2017-08-15 35.80532
-6  3 2017-04-22 14.18477
+  id       date     value
+4  1 2017-02-03 17.171802
+9  2 2017-03-20 28.278924
+7  3 2017-02-28  2.440719
 ```
 
 data.frame Examples
@@ -326,7 +308,7 @@ tapply(df[,'date'], df[,'id'], min)
 
 ```
     1     2     3 
-17177 17393 17278 
+17200 17245 17225 
 ```
 
 ```r
@@ -335,7 +317,7 @@ as.Date(tapply(df[,'date'], df[,'id'], min), origin = '1970-01-01')
 
 ```
            1            2            3 
-"2017-01-11" "2017-08-15" "2017-04-22" 
+"2017-02-03" "2017-03-20" "2017-02-28" 
 ```
 
 ```r
@@ -344,7 +326,7 @@ tapply(df[,'value'], df[,'id'], mean)
 
 ```
        1        2        3 
-65.81595 48.55712 37.94209 
+48.75660 45.26569 49.61705 
 ```
 
 data.frame Examples
@@ -360,9 +342,9 @@ cbind(c1, c2, c3)
 
 ```
      c1    c2       c3
-1 17177 17177 65.81595
-2 17393 17393 48.55712
-3 17278 17278 37.94209
+1 17200 17200 48.75660
+2 17245 17245 45.26569
+3 17225 17225 49.61705
 ```
 
 ```r
@@ -371,9 +353,9 @@ data.frame(mindateint = c1, mindate = c2, meanval = c3)
 
 ```
   mindateint    mindate  meanval
-1      17177 2017-01-11 65.81595
-2      17393 2017-08-15 48.55712
-3      17278 2017-04-22 37.94209
+1      17200 2017-02-03 48.75660
+2      17245 2017-03-20 45.26569
+3      17225 2017-02-28 49.61705
 ```
 
 Descriptive Statistics with Hmisc
@@ -416,7 +398,7 @@ Scatterplot
 ggplot2::qplot(waist, weight, data = diabetes, color = gender)
 ```
 
-![plot of chunk unnamed-chunk-12](beginr.Rmd-figure/unnamed-chunk-12-1.png)
+![plot of chunk unnamed-chunk-11](beginr.Rmd-figure/unnamed-chunk-11-1.png)
 
 Running a Model with Predictions
 ========================================================
@@ -455,7 +437,7 @@ rolldice(2)
 ```
 
 ```
-[1] 4
+[1] 6
 ```
 
 ```r
@@ -463,7 +445,7 @@ mean(replicate(1000, rolldice(sides = 100)))
 ```
 
 ```
-[1] 49.222
+[1] 49.85
 ```
 
 Find Practice Problems
@@ -500,5 +482,5 @@ mean(replicate(1000, play()))
 ```
 
 ```
-[1] 8.938
+[1] 8.964
 ```

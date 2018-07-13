@@ -5,6 +5,8 @@ date: July 13, 2018
 autosize: true
 css: myrules.css
 
+### Why are you here?
+
 Programming is like Sudoku
 ========================================================
 
@@ -56,7 +58,7 @@ Sources
 type|site|link
 -----|-----|-----
 forum|stackoverflow|https://stackoverflow.com/questions/tagged/r
-forum|R-help|https://stat.ethz.ch/mailman/listinfo/r-help
+forum|Rstudio community|https://community.rstudio.com/
 course|Coursera|https://www.coursera.org/course/rprog
 course|Datacamp|https://www.datacamp.com/courses/introduction-to-r
 tutorial|swirl|https://github.com/swirldev/swirl_courses#swirl-courses
@@ -127,33 +129,22 @@ sample(10, 5)
 sample(3, 5, replace = TRUE)
 ```
 
-Sampling from Distributions
+Creating Categorical Variables
 ========================================================
 
-help("Distributions")
+In R, categorical variables are called factors
 
 ```{r}
-rnorm(5)
-rbinom(10, 1, 0.5)
-rpois(5, 3)
-```
-
-Simulation Example
-========================================================
-
-```{r}
-x <- rnorm(50)
-mean(x)
-boot.samp <- numeric(1000)
-for(i in seq_along(boot.samp)) {
-  bx <- sample(x, replace = TRUE)
-  boot.samp[i] <- mean(bx)
-}
-mean(boot.samp)
+race <- factor(sample(3, 10, replace = TRUE), labels = c('white','black','other'))
+race
+unclass(race)
+factor(sample(c('light','moderate','vigorous'), 10, replace = TRUE), ordered = TRUE)
 ```
 
 data.frame
 ========================================================
+
+Typically you will create a data.frame by importing a CSV file from Excel. It is also easy to create your own.
 
 ```{r}
 df <- data.frame(
