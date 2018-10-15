@@ -1,7 +1,7 @@
 How to Learn R
 ========================================================
 author: Cole Beck
-date: July 13, 2018
+date: October 15, 2018
 autosize: true
 css: myrules.css
 
@@ -79,6 +79,23 @@ help.search('norm')|any function with name or description containing "norm"
 help('rnorm')|help page for "rnorm" function
 ?rnorm|help page for "rnorm" function
 help(package = "survival")|help page for "survival" package
+example(qbirthday)|run examples for "qbirthday" function
+
+R Packages
+========================================================
+
+An R package is a collection of code to perform some task.
+
+### Terms to know
+
+- CRAN (install.packages)
+- GitHub (devtools::install_github)
+- binary (ready for use on given OS)
+- source (must compile C/Fortran code)
+
+### Find packages by task
+
+https://cran.r-project.org/web/views/
 
 Building Blocks
 ========================================================
@@ -155,6 +172,36 @@ df <- data.frame(
 df
 ```
 
+Reading in data
+========================================================
+
+Delimited text files can be read into R, either saved locally or downloaded from a web page.
+
+```{r, eval = FALSE}
+url <- "https://extranet.who.int/tme/generateCSV.asp?ds=notifications"
+tb <- read.csv(url)
+```
+
+Packages are available to save or load data formatted for other applications.
+
+- databases (MySQL)
+- other statistical programs (SAS, Stata)
+- HTML
+- REDCap API
+
+Reading in data
+========================================================
+
+The `rio` package has a helpful listing of packages to use for data import and export.
+
+For instance, `haven` can work with data from SAS, SPSS, and Stata.
+
+See https://github.com/leeper/rio
+
+***
+
+![Importing and exporting additional file types](rio-formats.png "Data Formats")
+
 data.frame Examples
 ========================================================
 
@@ -229,6 +276,40 @@ rolldice(2)
 mean(replicate(1000, rolldice(sides = 100)))
 ```
 
+Finding Text
+========================================================
+
+```{r}
+grepl('eight', names(diabetes))
+grep('eight', names(diabetes))
+grep('eight', names(diabetes), value = TRUE)
+diabetes[1:3,grep('eight', names(diabetes))]
+```
+
+Creating Output
+========================================================
+
+### Terms to know
+
+term|description|do you care?
+----|----|----
+RStudio|IDE, environment for developing R code|yes
+LaTeX|typesetting language|no
+Rnw|mix of R code with LaTeX|no
+md|lightweight markup language|yes
+Rmd|mix of R code with markdown|yes
+knitr|R package that dynamically converts R chunks into structured text|yes
+pandoc|converts document format|no
+shiny|R code execution through web page|maybe
+
+Output Format
+========================================================
+
+- text files (CSV)
+- images (PNG, JPEG)
+- HTML
+- PDF
+
 Find Practice Problems
 ========================================================
 
@@ -236,27 +317,3 @@ Find Practice Problems
 - https://projecteuler.net/archives
 - https://www.kaggle.com/competitions
 - https://fivethirtyeight.com/tag/the-riddler/
-
-```
-You play a game with four balls: One ball is red, one is blue, one is green and one is yellow. They are placed in a box. You draw a ball out of the box at random and note its color. Without replacing the first ball, you draw a second ball and then paint it to match the color of the first. Replace both balls, and repeat the process. The game ends when all four balls have become the same color. What is the expected number of turns to finish the game?
-```
-
-Answer
-========================================================
-
-```{r}
-draw <- function(box) {
-  x <- sample(box)
-  x[2] <- x[1]
-  x
-}
-play <- function(colors = c('red','blue','green','yellow')) {
-  cnt <- 0
-  while(length(unique(colors)) > 1) {
-    colors <- draw(colors)
-    cnt <- cnt + 1
-  }
-  cnt
-}
-mean(replicate(1000, play()))
-```

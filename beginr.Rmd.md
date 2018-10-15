@@ -1,7 +1,7 @@
 How to Learn R
 ========================================================
 author: Cole Beck
-date: July 13, 2018
+date: October 15, 2018
 autosize: true
 css: myrules.css
 
@@ -61,6 +61,23 @@ help.search('norm')|any function with name or description containing "norm"
 help('rnorm')|help page for "rnorm" function
 ?rnorm|help page for "rnorm" function
 help(package = "survival")|help page for "survival" package
+example(qbirthday)|run examples for "qbirthday" function
+
+R Packages
+========================================================
+
+An R package is a collection of code to perform some task.
+
+### Terms to know
+
+- CRAN (install.packages)
+- GitHub (devtools::install_github)
+- binary (ready for use on given OS)
+- source (must compile C/Fortran code)
+
+### Find packages by task
+
+https://cran.r-project.org/web/views/
 
 Building Blocks
 ========================================================
@@ -166,7 +183,7 @@ sample(10, 5)
 ```
 
 ```
-[1]  3  6  5 10  8
+[1] 3 8 2 9 5
 ```
 
 ```r
@@ -174,7 +191,7 @@ sample(3, 5, replace = TRUE)
 ```
 
 ```
-[1] 3 2 2 2 3
+[1] 3 2 3 1 3
 ```
 
 Creating Categorical Variables
@@ -189,7 +206,7 @@ race
 ```
 
 ```
- [1] white white white white black other white black other other
+ [1] white black white other other white white white black white
 Levels: white black other
 ```
 
@@ -198,7 +215,7 @@ unclass(race)
 ```
 
 ```
- [1] 1 1 1 1 2 3 1 2 3 3
+ [1] 1 2 1 3 3 1 1 1 2 1
 attr(,"levels")
 [1] "white" "black" "other"
 ```
@@ -208,8 +225,8 @@ factor(sample(c('light','moderate','vigorous'), 10, replace = TRUE), ordered = T
 ```
 
 ```
- [1] moderate light    vigorous vigorous light    vigorous moderate
- [8] moderate moderate moderate
+ [1] light    vigorous moderate light    light    vigorous vigorous
+ [8] vigorous vigorous vigorous
 Levels: light < moderate < vigorous
 ```
 
@@ -230,17 +247,48 @@ df
 
 ```
    id       date     value
-1   3 2017-09-14 75.005901
-2   2 2017-10-26 36.314735
-3   1 2017-04-06 80.341398
-4   1 2017-02-03 17.171802
-5   2 2017-08-28  2.338486
-6   2 2017-09-23 73.365255
-7   3 2017-02-28  2.440719
-8   2 2017-08-12 86.031041
-9   2 2017-03-20 28.278924
-10  3 2017-08-07 71.404525
+1   1 2017-10-02 56.590979
+2   3 2017-04-02 88.695851
+3   3 2017-07-12 53.610464
+4   1 2017-02-24 49.823884
+5   1 2017-12-15 89.572157
+6   2 2017-03-28  7.540336
+7   1 2017-06-25 24.441849
+8   3 2017-06-12 87.578784
+9   3 2017-11-06 42.260657
+10  2 2017-09-28 85.650585
 ```
+
+Reading in data
+========================================================
+
+Delimited text files can be read into R, either saved locally or downloaded from a web page.
+
+
+```r
+url <- "https://extranet.who.int/tme/generateCSV.asp?ds=notifications"
+tb <- read.csv(url)
+```
+
+Packages are available to save or load data formatted for other applications.
+
+- databases (MySQL)
+- other statistical programs (SAS, Stata)
+- HTML
+- REDCap API
+
+Reading in data
+========================================================
+
+The `rio` package has a helpful listing of packages to use for data import and export.
+
+For instance, `haven` can work with data from SAS, SPSS, and Stata.
+
+See https://github.com/leeper/rio
+
+***
+
+![Importing and exporting additional file types](rio-formats.png "Data Formats")
 
 data.frame Examples
 ========================================================
@@ -253,7 +301,7 @@ table(df[,'id'])
 ```
 
 1 2 3 
-2 5 3 
+4 2 4 
 ```
 
 ```r
@@ -263,11 +311,11 @@ sorteddf[1:5,]
 
 ```
   id       date     value
-4  1 2017-02-03 17.171802
-3  1 2017-04-06 80.341398
-9  2 2017-03-20 28.278924
-8  2 2017-08-12 86.031041
-5  2 2017-08-28  2.338486
+4  1 2017-02-24 49.823884
+7  1 2017-06-25 24.441849
+1  1 2017-10-02 56.590979
+5  1 2017-12-15 89.572157
+6  2 2017-03-28  7.540336
 ```
 
 data.frame Examples
@@ -281,10 +329,11 @@ df[df[,'value'] > 75,]
 ```
 
 ```
-  id       date    value
-1  3 2017-09-14 75.00590
-3  1 2017-04-06 80.34140
-8  2 2017-08-12 86.03104
+   id       date    value
+2   3 2017-04-02 88.69585
+5   1 2017-12-15 89.57216
+8   3 2017-06-12 87.57878
+10  2 2017-09-28 85.65059
 ```
 
 ```r
@@ -293,9 +342,9 @@ sorteddf[!duplicated(sorteddf[,'id']),]
 
 ```
   id       date     value
-4  1 2017-02-03 17.171802
-9  2 2017-03-20 28.278924
-7  3 2017-02-28  2.440719
+4  1 2017-02-24 49.823884
+6  2 2017-03-28  7.540336
+2  3 2017-04-02 88.695851
 ```
 
 data.frame Examples
@@ -308,7 +357,7 @@ tapply(df[,'date'], df[,'id'], min)
 
 ```
     1     2     3 
-17200 17245 17225 
+17221 17253 17258 
 ```
 
 ```r
@@ -317,7 +366,7 @@ as.Date(tapply(df[,'date'], df[,'id'], min), origin = '1970-01-01')
 
 ```
            1            2            3 
-"2017-02-03" "2017-03-20" "2017-02-28" 
+"2017-02-24" "2017-03-28" "2017-04-02" 
 ```
 
 ```r
@@ -326,7 +375,7 @@ tapply(df[,'value'], df[,'id'], mean)
 
 ```
        1        2        3 
-48.75660 45.26569 49.61705 
+55.10722 46.59546 68.03644 
 ```
 
 data.frame Examples
@@ -342,9 +391,9 @@ cbind(c1, c2, c3)
 
 ```
      c1    c2       c3
-1 17200 17200 48.75660
-2 17245 17245 45.26569
-3 17225 17225 49.61705
+1 17221 17221 55.10722
+2 17253 17253 46.59546
+3 17258 17258 68.03644
 ```
 
 ```r
@@ -353,9 +402,9 @@ data.frame(mindateint = c1, mindate = c2, meanval = c3)
 
 ```
   mindateint    mindate  meanval
-1      17200 2017-02-03 48.75660
-2      17245 2017-03-20 45.26569
-3      17225 2017-02-28 49.61705
+1      17221 2017-02-24 55.10722
+2      17253 2017-03-28 46.59546
+3      17258 2017-04-02 68.03644
 ```
 
 Descriptive Statistics with Hmisc
@@ -398,7 +447,7 @@ Scatterplot
 ggplot2::qplot(waist, weight, data = diabetes, color = gender)
 ```
 
-![plot of chunk unnamed-chunk-11](beginr.Rmd-figure/unnamed-chunk-11-1.png)
+![plot of chunk unnamed-chunk-12](beginr.Rmd-figure/unnamed-chunk-12-1.png)
 
 Running a Model with Predictions
 ========================================================
@@ -445,8 +494,72 @@ mean(replicate(1000, rolldice(sides = 100)))
 ```
 
 ```
-[1] 49.85
+[1] 51.565
 ```
+
+Finding Text
+========================================================
+
+
+```r
+grepl('eight', names(diabetes))
+```
+
+```
+ [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE
+[12] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+```
+
+```r
+grep('eight', names(diabetes))
+```
+
+```
+[1] 10 11
+```
+
+```r
+grep('eight', names(diabetes), value = TRUE)
+```
+
+```
+[1] "height" "weight"
+```
+
+```r
+diabetes[1:3,grep('eight', names(diabetes))]
+```
+
+```
+  height weight
+1     62    121
+2     64    218
+3     61    256
+```
+
+Creating Output
+========================================================
+
+### Terms to know
+
+term|description|do you care?
+----|----|----
+RStudio|IDE, environment for developing R code|yes
+LaTeX|typesetting language|no
+Rnw|mix of R code with LaTeX|no
+md|lightweight markup language|yes
+Rmd|mix of R code with markdown|yes
+knitr|R package that dynamically converts R chunks into structured text|yes
+pandoc|converts document format|no
+shiny|R code execution through web page|maybe
+
+Output Format
+========================================================
+
+- text files (CSV)
+- images (PNG, JPEG)
+- HTML
+- PDF
 
 Find Practice Problems
 ========================================================
@@ -455,32 +568,3 @@ Find Practice Problems
 - https://projecteuler.net/archives
 - https://www.kaggle.com/competitions
 - https://fivethirtyeight.com/tag/the-riddler/
-
-```
-You play a game with four balls: One ball is red, one is blue, one is green and one is yellow. They are placed in a box. You draw a ball out of the box at random and note its color. Without replacing the first ball, you draw a second ball and then paint it to match the color of the first. Replace both balls, and repeat the process. The game ends when all four balls have become the same color. What is the expected number of turns to finish the game?
-```
-
-Answer
-========================================================
-
-
-```r
-draw <- function(box) {
-  x <- sample(box)
-  x[2] <- x[1]
-  x
-}
-play <- function(colors = c('red','blue','green','yellow')) {
-  cnt <- 0
-  while(length(unique(colors)) > 1) {
-    colors <- draw(colors)
-    cnt <- cnt + 1
-  }
-  cnt
-}
-mean(replicate(1000, play()))
-```
-
-```
-[1] 8.964
-```
