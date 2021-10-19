@@ -1,7 +1,7 @@
 How to Learn R
 ========================================================
 author: Cole Beck
-date: October 15, 2018
+date: October 21, 2021
 autosize: true
 css: myrules.css
 
@@ -16,6 +16,13 @@ Programming is like Sudoku
 - does order matter when applying rules?
 - are there multiple solutions?
 - practice makes perfect
+
+Why does anyone use R?
+========================================================
+
+![Approachability](analyze-q8-1.png "R's popularity")
+
+Taken from https://mirai-solutions.ch/news/2021/09/01/panel-survey-data/
 
 Sources of Information
 ========================================================
@@ -34,7 +41,7 @@ https://stackoverflow.com/tags/r/info
 
 Contact Cole at [cole.beck@vumc.org](mailto:cole.beck@vumc.org?subject=R Clinic)
 
-Sources
+Resources
 ========================================================
 
 type|site|link
@@ -183,7 +190,7 @@ sample(10, 5)
 ```
 
 ```
-[1] 6 3 5 4 9
+[1] 8 4 9 7 2
 ```
 
 ```r
@@ -191,7 +198,7 @@ sample(3, 5, replace = TRUE)
 ```
 
 ```
-[1] 3 1 1 2 3
+[1] 3 3 2 1 2
 ```
 
 Creating Categorical Variables
@@ -206,7 +213,7 @@ race
 ```
 
 ```
- [1] white black other other white black other black black white
+ [1] white black white white white black other other other black
 Levels: white black other
 ```
 
@@ -215,7 +222,7 @@ unclass(race)
 ```
 
 ```
- [1] 1 2 3 3 1 2 3 2 2 1
+ [1] 1 2 1 1 1 2 3 3 3 2
 attr(,"levels")
 [1] "white" "black" "other"
 ```
@@ -225,8 +232,7 @@ factor(sample(c('light','moderate','vigorous'), 10, replace = TRUE), ordered = T
 ```
 
 ```
- [1] moderate vigorous light    light    light    vigorous vigorous
- [8] light    light    vigorous
+ [1] light    vigorous moderate moderate light    light    moderate light    light    vigorous
 Levels: light < moderate < vigorous
 ```
 
@@ -246,17 +252,17 @@ df
 ```
 
 ```
-   id       date    value
-1   3 2017-01-06 14.64126
-2   2 2017-01-19 57.78862
-3   2 2017-02-02 98.78467
-4   2 2017-05-04 65.47159
-5   3 2017-05-01 19.30747
-6   3 2017-05-03 62.08700
-7   3 2017-06-05 88.77922
-8   1 2017-03-07 43.47971
-9   2 2017-10-23 47.74018
-10  1 2017-03-23 24.93960
+   id       date     value
+1   2 2017-03-29 28.180493
+2   2 2017-09-15 75.855543
+3   3 2017-09-19 12.764917
+4   2 2017-03-25 54.364930
+5   3 2017-11-11  5.688564
+6   2 2017-02-27 53.547533
+7   2 2017-05-24 68.970241
+8   3 2017-08-11 67.999506
+9   1 2017-05-03 58.086288
+10  2 2017-07-10 77.069428
 ```
 
 Reading in data
@@ -301,7 +307,7 @@ table(df[,'id'])
 ```
 
 1 2 3 
-2 4 4 
+1 6 3 
 ```
 
 ```r
@@ -310,12 +316,12 @@ sorteddf[1:5,]
 ```
 
 ```
-   id       date    value
-8   1 2017-03-07 43.47971
-10  1 2017-03-23 24.93960
-2   2 2017-01-19 57.78862
-3   2 2017-02-02 98.78467
-4   2 2017-05-04 65.47159
+  id       date    value
+9  1 2017-05-03 58.08629
+6  2 2017-02-27 53.54753
+4  2 2017-03-25 54.36493
+1  2 2017-03-29 28.18049
+7  2 2017-05-24 68.97024
 ```
 
 data.frame Examples
@@ -329,9 +335,9 @@ df[df[,'value'] > 75,]
 ```
 
 ```
-  id       date    value
-3  2 2017-02-02 98.78467
-7  3 2017-06-05 88.77922
+   id       date    value
+2   2 2017-09-15 75.85554
+10  2 2017-07-10 77.06943
 ```
 
 ```r
@@ -340,9 +346,9 @@ sorteddf[!duplicated(sorteddf[,'id']),]
 
 ```
   id       date    value
-8  1 2017-03-07 43.47971
-2  2 2017-01-19 57.78862
-1  3 2017-01-06 14.64126
+9  1 2017-05-03 58.08629
+6  2 2017-02-27 53.54753
+8  3 2017-08-11 67.99951
 ```
 
 data.frame Examples
@@ -355,7 +361,7 @@ tapply(df[,'date'], df[,'id'], min)
 
 ```
     1     2     3 
-17232 17185 17172 
+17289 17224 17389 
 ```
 
 ```r
@@ -364,7 +370,7 @@ as.Date(tapply(df[,'date'], df[,'id'], min), origin = '1970-01-01')
 
 ```
            1            2            3 
-"2017-03-07" "2017-01-19" "2017-01-06" 
+"2017-05-03" "2017-02-27" "2017-08-11" 
 ```
 
 ```r
@@ -373,7 +379,7 @@ tapply(df[,'value'], df[,'id'], mean)
 
 ```
        1        2        3 
-34.20965 67.44627 46.20374 
+58.08629 59.66469 28.81766 
 ```
 
 data.frame Examples
@@ -389,9 +395,9 @@ cbind(c1, c2, c3)
 
 ```
      c1    c2       c3
-1 17232 17232 34.20965
-2 17185 17185 67.44627
-3 17172 17172 46.20374
+1 17289 17289 58.08629
+2 17224 17224 59.66469
+3 17389 17389 28.81766
 ```
 
 ```r
@@ -400,9 +406,9 @@ data.frame(mindateint = c1, mindate = c2, meanval = c3)
 
 ```
   mindateint    mindate  meanval
-1      17232 2017-03-07 34.20965
-2      17185 2017-01-19 67.44627
-3      17172 2017-01-06 46.20374
+1      17289 2017-05-03 58.08629
+2      17224 2017-02-27 59.66469
+3      17389 2017-08-11 28.81766
 ```
 
 Descriptive Statistics with Hmisc
@@ -418,15 +424,13 @@ Hmisc::describe(diabetes[,c('chol','gender')])
 diabetes[, c("chol", "gender")] 
 
  2  Variables      403  Observations
----------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
 chol : Total Cholesterol 
-       n  missing distinct     Info     Mean      Gmd      .05      .10 
-     402        1      154        1    207.8    48.22    145.0    158.0 
-     .25      .50      .75      .90      .95 
-   179.0    204.0    230.0    264.8    291.8 
+       n  missing distinct     Info     Mean      Gmd      .05      .10      .25      .50      .75      .90      .95 
+     402        1      154        1    207.8    48.22    145.0    158.0    179.0    204.0    230.0    264.8    291.8 
 
 lowest :  78 115 118 122 128, highest: 337 342 347 404 443
----------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
 gender 
        n  missing distinct 
      403        0        2 
@@ -434,7 +438,7 @@ gender
 Value        male female
 Frequency     169    234
 Proportion  0.419  0.581
----------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
 ```
 
 Scatterplot
@@ -484,7 +488,7 @@ rolldice(2)
 ```
 
 ```
-[1] 9
+[1] 4
 ```
 
 ```r
@@ -492,7 +496,7 @@ mean(replicate(1000, rolldice(sides = 100)))
 ```
 
 ```
-[1] 50.419
+[1] 50.719
 ```
 
 Finding Text
@@ -504,8 +508,7 @@ grepl('eight', names(diabetes))
 ```
 
 ```
- [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE
-[12] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+ [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
 ```
 
 ```r

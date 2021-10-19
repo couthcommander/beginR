@@ -1,7 +1,7 @@
 How to Learn R
 ========================================================
 author: Cole Beck
-date: October 15, 2018
+date: October 21, 2021
 autosize: true
 css: myrules.css
 
@@ -35,6 +35,13 @@ text(xs[9], ys[9], 2, cex = 3)
 - are there multiple solutions?
 - practice makes perfect
 
+Why does anyone use R?
+========================================================
+
+![Approachability](analyze-q8-1.png "R's popularity")
+
+Taken from https://mirai-solutions.ch/news/2021/09/01/panel-survey-data/
+
 Sources of Information
 ========================================================
 
@@ -52,7 +59,7 @@ https://stackoverflow.com/tags/r/info
 
 Contact Cole at [cole.beck@vumc.org](mailto:cole.beck@vumc.org?subject=R Clinic)
 
-Sources
+Resources
 ========================================================
 
 type|site|link
